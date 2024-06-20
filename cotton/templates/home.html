@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Tables</h5>
+        <p class="card-text"> View the raw data as tables </p>
+        <a type="button" class="btn btn-outline-dark" href="{% url 'table' 'Cc2019' %}" class="card-link">Start</a>
+    </div>
+</div>
+
+</br>
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Graphs</h5>
+        <p class="card-text"> Explore the data and make graphs </p>
+        <a type="button" class="btn btn-outline-dark" href="{% url 'graph' 'Cc2019' %}" class="card-link">Start</a>
+    </div>
+</div>
+
+</br>
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Maps</h5>
+        <p class="card-text"> Explore the data and heatmaps with maps </p>
+        <a type="button" class="btn btn-outline-dark" href="{% url 'map' '2022' %}" class="card-link">Start</a>
+    </div>
+</div>
+
+{% else %}
+
+<div class="col-md-6 offset-md-3">
+    <h1>Login</h1>
+    <br/>
+    
+    <form method="POST" action="{% url 'home' %}">
+        {% csrf_token %}
+    
+            <div class="mb-3">
+                <input type="text" class="form-control" name="username", placeholder="Username" required>
+                
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" name="password", placeholder="Password" required>
+            </div>
+            <br/>
+            <button type="submit" class="btn btn-secondary">Login</button>
+    
+    </form>
+</div>
+
+{% endif %}
+
+
+{% endblock %}

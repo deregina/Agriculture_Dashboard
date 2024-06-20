@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2> Line Plot (Average) </h2>
+
+</br>
+
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Choose Year and Feature
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'graph' 'Cc2019' %}">2019 Canopy Cover</a></li>
+    <li><a class="dropdown-item" href="{% url 'graph' 'Cc2020' %}">2020 Canopy Cover</a></li>
+    <li><a class="dropdown-item" href="{% url 'graph' 'Cc2021' %}">2021 Canopy Cover</a></li>
+    <li><a class="dropdown-item" href="{% url 'graph' 'Cc2022' %}">2022 Canopy Cover</a></li>
+    <li><a class="dropdown-item" href="{% url 'graph' 'Cc2023' %}">2023 Canopy Cover</a></li>
+  </ul>
+</div>
+</br>
+
+
+{% if chart %}
+    <img src="data:image/png;base64, {{chart|safe}}">
+{% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2> Canopy Cover 2019 </h2>
+</br>
+
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Choose Year and Feature
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'table' 'Cc2019' %}">2019 Canopy Cover</a></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><a class="dropdown-item" href="#">Something else here</a></li>
+  </ul>
+</div>
+</br>
+
+<table class="table table-hover">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">FID</th>
+        <th scope="col">2019-03-09</th>
+        <th scope="col">2019-04-12</th>
+        <th scope="col">2019-05-09</th>
+        <th scope="col">2019-06-04</th>
+        <th scope="col">2019-06-14</th>
+        <th scope="col">2019-06-28</th>
+        <th scope="col">2019-07-11</th>
+        <th scope="col">2019-07-18</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+      {% if data %}
+          {% for row in data %}
+              <tr>
+                  <td>{{ row.fid }}</td>
+                  <td>{{ row.number_2019_03_09 }}</td>
+                  <td>{{ row.number_2019_04_12 }}</td>
+                  <td>{{ row.number_2019_05_09 }}</td>
+                  <td>{{ row.number_2019_06_04 }}</td>
+                  <td>{{ row.number_2019_06_14 }}</td>
+                  <td>{{ row.number_2019_06_28 }}</td>
+                  <td>{{ row.number_2019_07_11 }}</td>
+                  <td>{{ row.number_2019_07_18 }}</td>
+              </tr>
+          {% endfor %}
+      {% endif %}
+
+            </tbody>
+        </table>
+
+
+
+{% endblock %}
