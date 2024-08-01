@@ -4,12 +4,70 @@
 
 <h2> Map </h2>
 
-</br>
+<br/>
 
+<div class="btn-group">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    {{ year }}
+  </button>
+  <ul class="dropdown-menu">
+    {% for year in year_list %}
+    <li><a class="dropdown-item" href="{% url 'map' year feature date %}">{{ year }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="btn-group">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    {{ feature }}
+  </button>
+  <ul class="dropdown-menu">
+    {% for feature in feature_list %}
+      {% if date == 'yield' %}
+        <li><a class="dropdown-item" href="{% url 'map' year feature 'd220408' %}">{{ feature }}</a></li>
+
+      {% elif feature == 'yield' %}
+        <li><a class="dropdown-item" href="{% url 'map' year feature 'yield' %}">{{ feature }}</a></li>
+      {% else %}
+        <li><a class="dropdown-item" href="{% url 'map' year feature date %}">{{ feature }}</a></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="btn-group">
+  <div class="container slider-container">
+    <input type="range" class="form-control-range" id="rangeSlider" min="0" max="{{ dates|length|add:"-1" }}" step="1" value="{{ index }}">
+    <p>Date: <span id="dateValue">{{ date|slice:"1:" }}</span></p>
+  </div>
+</div>
+
+<br/>
 
 {% if map %}
   {{ map|safe }}
 {% endif %}
+
+<script>
+  const dates = [
+    {% for date in dates %}
+    '{{ date }}',
+    {% endfor %}
+  ];
+
+  document.getElementById('rangeSlider').addEventListener('input', function() {
+    const value = this.value;
+    const date = dates[value];
+    document.getElementById('dateValue').textContent = date;
+
+    // Redirect to the new URL based on the selected date
+    const year = '{{ year }}';
+    const feature = '{{ feature }}';
+    const urlTemplate = "{% url 'map' year feature 'REPLACE_DATE' %}";
+    const newUrl = urlTemplate.replace('REPLACE_DATE', date);
+    window.location.href = newUrl;
+  });
+</script>
 
 
 {% endblock %}

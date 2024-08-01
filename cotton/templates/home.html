@@ -4,31 +4,45 @@
 
 {% if user.is_authenticated %}
 
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title">Tables</h5>
-        <p class="card-text"> View the raw data as tables </p>
-        <a type="button" class="btn btn-outline-dark" href="{% url 'table' 'Cc2019' %}" class="card-link">Start</a>
+<div class="card-group">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Tables</h5>
+            <p class="card-text"> View the raw data as tables </p>
+            <a type="button" class="btn btn-outline-dark" href="{% url 'table' 'Cc2019' %}" class="card-link">Start</a>
+        </div>
+    </div>
+
+    </br>
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Graphs</h5>
+            <p class="card-text"> Explore the data and make graphs </p>
+            <a type="button" class="btn btn-outline-dark" href="{% url 'graph' 'Cc2019' %}" class="card-link">Start</a>
+        </div>
+    </div>
+
+    </br>
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Maps</h5>
+            <p class="card-text"> Explore the data and heatmaps with maps </p>
+            <a type="button" class="btn btn-outline-dark" href="{% url 'map' '2022' 'CC' 'd220630' %}" class="card-link">Start</a>
+        </div>
     </div>
 </div>
 
 </br>
 
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title">Graphs</h5>
-        <p class="card-text"> Explore the data and make graphs </p>
-        <a type="button" class="btn btn-outline-dark" href="{% url 'graph' 'Cc2019' %}" class="card-link">Start</a>
-    </div>
-</div>
-
-</br>
-
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title">Maps</h5>
-        <p class="card-text"> Explore the data and heatmaps with maps </p>
-        <a type="button" class="btn btn-outline-dark" href="{% url 'map' '2022' %}" class="card-link">Start</a>
+<div class="card-group">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Add a project</h5>
+            <p class="card-text"> Make a Plot Boundary </p>
+            <a type="button" class="btn btn-outline-dark" href="{% url 'make_shp' %}" class="card-link">Start</a>
+        </div>
     </div>
 </div>
 

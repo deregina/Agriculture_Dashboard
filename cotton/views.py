@@ -1,9 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 from .models import *
+
+import os
 import pandas as pd
 import geopandas as gpd
+import geemap
+from .forms import *
 
 
 def home(request):
@@ -30,8 +37,26 @@ def logout_user(request):
 	messages.success(request, "Logged Out")
 	return redirect('home')
 
+def register_user(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Successfully Registered. Please Log in.")
+            return redirect('home')
+    
+    else:
+        form = SignUpForm()
+        return render(request, 'register.html', {'form':form})
+    
+    return render(request, 'register.html', {'form':form})
+
 
 # Tables and Graphs
+
+feature_list = ['CC', 'PH', 'CV', 'ExG', 'yield']
+
+year_list = ['2019', '2020', '2021', '2022', '2023']
 
 model_dict = {'Cc2019':Cc2019, 'Cc2020':Cc2020, 'Cc2021':Cc2021, 'Cc2022':Cc2022, 'Cc2023':Cc2023,
               'Cv2019':Cv2019, 'Cv2020':Cv2020, 'Cv2021':Cv2021, 'Cv2022':Cv2022, 'Cv2023':Cv2023,
@@ -66,24 +91,53 @@ def get_avg_line(request, year_feature):
         return render(request, 'graph.html', {'chart':chart})
 
     else:
+        messages.success(request, "You must be Logged in to view the page")
+        return redirect('home')
+
+
+def get_map(request, year='2022', feature='CC', date='d220408'):
+    if request.user.is_authenticated:
+        context = {}
+        
+        data = gpd.read_file(f"cotton/geojson/geodata{year}_{feature}.geojson")
+        cols = list(data.columns)[1:-1]
+        m = data.explore(column=date, categorical=True, cmap='RdYlGn', legend=False)
+
+        context['map'] = m._repr_html_()
+
+        context['year'] = year
+        context['feature'] = feature
+        context['date'] = date
+        context['index'] = cols.index(date)
+
+        context['data'] = data
+        context['year_list'] = year_list
+        context['feature_list'] = feature_list
+        context['dates'] = cols
+    
+    
+        return render(request, 'base_map.html', context)
+    else:
         messages.success(request, "You must be Logged in to View the Page...")
         return redirect('home')
-    
-map_dict = {'2019':Shp2019, '2022':Shp2022}
 
-def get_map(request, year):
-    
-    data = gpd.read_file("cotton/geojson/geodata2022_CC.geojson")
-
-    #   data = gpd.GeoDataFrame(list( model_dict['Cc'+year].objects.all().values()) )
-    #   shp = gpd.GeoDataFrame(list( map_dict[year].objects.all().values()) )
-
-    #   data = data.merge(shp, left_on="fid", right_on="fid")
-    #   t = type(data)
+def draw_map(request):
+     return render(request, 'make_shp.html')
       
-    m = data.explore(column="d220603", categorical=True, cmap='RdYlGn')
+import json
 
-    #   data_col = data.columns
-    #   shp_col = shp.columns
+@csrf_exempt
+def geojson_to_shp(request):
+    if request.method == 'POST':
+        geojson_data = json.loads(request.body)
+        # Process the geojson data
+        print(geojson_data)
+        context = {'geojson_data':geojson_data}
 
-    return render(request, 'base_map.html', {'data':data, 'map':m._repr_html_()})  #, 'map':m._repr_html()})
+        # Respond with a success message
+        return render(request, 'download_shp.html', context)
+    return JsonResponse({'result': 'error', 'message': 'Invalid request'}, status=400)
+
+    # return render(request, 'graph.html', {'chart':chart})
+    # return JsonResponse({'result': 'success'})
+
